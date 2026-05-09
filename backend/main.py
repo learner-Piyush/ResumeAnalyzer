@@ -7,7 +7,10 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://resume-analyzer-theta-seven.vercel.app"
+        ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -22,10 +25,3 @@ async def analyze(file: UploadFile = File(...), job_desc: str = Form(...)):
     text = await extract_text(file)
     result = analyze_resume(text, job_desc)
     return result
-
-if __name__ == "__main__":
-    import os
-    import uvicorn
-
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, proxy_headers=True)
